@@ -8,8 +8,11 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+<<<<<<< HEAD
 import org.signal.aesgcmprovider.AesGcmProvider
 import java.security.Security
+=======
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -38,7 +41,10 @@ class CryptoPlugin : FlutterPlugin {
     private var progressSink: EventChannel.EventSink? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+<<<<<<< HEAD
         registerStreamingGcmProviderOnce()
+=======
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         engine = EncryptionEngine(binding.applicationContext)
 
         methodChannel = MethodChannel(binding.binaryMessenger, METHOD_CHANNEL)
@@ -173,6 +179,7 @@ class CryptoPlugin : FlutterPlugin {
 
     private fun ByteArray.b64(): String = Base64.encodeToString(this, Base64.NO_WRAP)
 
+<<<<<<< HEAD
     /**
      * Registers Signal's [AesGcmProvider] ahead of Conscrypt so that
      * `Cipher.getInstance("AES/GCM/NoPadding")` resolves to a *true*
@@ -210,3 +217,10 @@ class CryptoPlugin : FlutterPlugin {
         @Volatile private var gcmProviderRegistered = false
     }
 }
+=======
+    companion object {
+        private const val METHOD_CHANNEL = "sero/crypto/methods"
+        private const val PROGRESS_CHANNEL = "sero/crypto/progress"
+    }
+}
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59

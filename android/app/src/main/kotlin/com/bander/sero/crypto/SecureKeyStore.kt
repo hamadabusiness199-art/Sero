@@ -108,6 +108,7 @@ class SecureKeyStore(context: Context) {
         }
     }
 
+<<<<<<< HEAD
     /** Encrypts and stores a raw PKCS8 (or PKCS1, auto-converted) DER private
      * key under [alias] using a Keystore-resident AES-256-GCM wrapping key. */
     fun importPrivateKey(alias: String, keyDer: ByteArray) {
@@ -141,6 +142,21 @@ class SecureKeyStore(context: Context) {
         // read back whatever it chose via cipher.iv.
         cipher.init(Cipher.ENCRYPT_MODE, wrappingKey)
         val iv = cipher.iv
+=======
+    /** Encrypts and stores a raw PKCS8 DER private key under [alias] using a
+     * Keystore-resident AES-256-GCM wrapping key. */
+    fun importPrivateKey(alias: String, pkcs8Der: ByteArray) {
+        try {
+            // Validate it actually parses as an RSA private key before storing.
+            KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(pkcs8Der))
+        } catch (t: Throwable) {
+            throw CryptoException.InvalidArgument("Invalid RSA private key (expected DER PKCS8): ${t.message}")
+        }
+        val wrappingKey = wrappingKey()
+        val cipher = Cipher.getInstance(CryptoFormat.AES_TRANSFORMATION)
+        val iv = ByteArray(CryptoFormat.GCM_IV_LENGTH).also { SecureRandom().nextBytes(it) }
+        cipher.init(Cipher.ENCRYPT_MODE, wrappingKey, GCMParameterSpec(CryptoFormat.GCM_TAG_LENGTH_BITS, iv))
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         val ciphertext = cipher.doFinal(pkcs8Der)
         privateKeyFile(alias).writeBytes(iv + ciphertext)
     }
@@ -232,6 +248,7 @@ class SecureKeyStore(context: Context) {
         return generator.generateKey()
     }
 
+<<<<<<< HEAD
     /** Wraps a raw PKCS1 `RSAPrivateKey` DER blob (as produced by
      * `openssl genrsa` / `openssl rsa`, i.e. a "-----BEGIN RSA PRIVATE
      * KEY-----" PEM) into a PKCS8 `PrivateKeyInfo` DER structure that
@@ -272,6 +289,8 @@ class SecureKeyStore(context: Context) {
         return byteArrayOf(tag.toByte()) + lengthBytes + content
     }
 
+=======
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
     private fun keystoreAlias(alias: String) = "sero_rsa_$alias"
     private fun publicKeyFile(alias: String) = File(keyDir, "$alias.pub.der")
     private fun privateKeyFile(alias: String) = File(keyDir, "$alias.priv.wrapped")
@@ -279,4 +298,8 @@ class SecureKeyStore(context: Context) {
     companion object {
         private const val ANDROID_KEYSTORE = "AndroidKeyStore"
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59

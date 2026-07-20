@@ -2,8 +2,12 @@
     <application
         android:label="sero"
         android:name="${applicationName}"
+<<<<<<< HEAD
         android:icon="@mipmap/ic_launcher"
         android:largeHeap="true">
+=======
+        android:icon="@mipmap/ic_launcher">
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -18,9 +22,15 @@
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data
+<<<<<<< HEAD
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme"
                 />
+=======
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -43,4 +53,8 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+<<<<<<< HEAD
 </manifest>
+=======
+</manifest>
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59

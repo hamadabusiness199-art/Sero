@@ -6,8 +6,13 @@ package com.bander.sero.crypto
  * Layout (all integers big-endian):
  *
  *   [0..5)    "ENCv1"                      5 bytes  - magic / version header
+<<<<<<< HEAD
  *   [5..7)    encryptedKeyLength (uint16)  2 bytes  - matches Python's struct.pack(">H", ...)
  *   [7..7+N)  RSA-OAEP-SHA256(AES-256 key) N bytes  - N == encryptedKeyLength
+=======
+ *   [5..9)    encryptedKeyLength (uint32)  4 bytes
+ *   [9..9+N)  RSA-OAEP-SHA256(AES-256 key) N bytes  - N == encryptedKeyLength
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
  *   [..+12)   GCM IV                       12 bytes - fresh random per file
  *   [..EOF)   AES-256-GCM ciphertext       ciphertext || 16-byte GCM tag
  *
@@ -35,4 +40,8 @@ object CryptoFormat {
 
     const val RSA_TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
     const val AES_TRANSFORMATION = "AES/GCM/NoPadding"
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59

@@ -6,7 +6,11 @@ plugins {
 
 android {
     namespace = "com.bander.sero"
+<<<<<<< HEAD
     compileSdk = 36
+=======
+    compileSdk = flutter.compileSdkVersion
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -46,6 +50,9 @@ kotlin {
 flutter {
     source = "../.."
 }
+<<<<<<< HEAD
 dependencies {
     implementation("org.signal:aesgcmprovider:0.0.3")
 }
+=======
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59

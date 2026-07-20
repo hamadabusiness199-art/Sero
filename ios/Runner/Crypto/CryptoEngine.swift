@@ -103,7 +103,11 @@ final class CryptoEngine {
 
         let (encryptedAesKey, iv) = try readHeader(input)
         let aesKey = try rsaDecryptKey(encryptedAesKey, with: privateKey)
+<<<<<<< HEAD
         let headerSize = CryptoFormat.magicBytes.count + 2 + encryptedAesKey.count + CryptoFormat.gcmIvLength
+=======
+        let headerSize = CryptoFormat.magicBytes.count + 4 + encryptedAesKey.count + CryptoFormat.gcmIvLength
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         let ciphertextAndTagSize = (totalBytes ?? 0) - Int64(headerSize)
         let ciphertextSize = ciphertextAndTagSize - Int64(CryptoFormat.gcmTagLength)
         guard ciphertextSize >= 0 else {
@@ -143,7 +147,11 @@ final class CryptoEngine {
 
         var out: [UInt8] = []
         out.append(contentsOf: CryptoFormat.magicBytes)
+<<<<<<< HEAD
         out.append(contentsOf: uint16BE(encryptedAesKey.count))
+=======
+        out.append(contentsOf: uint32BE(encryptedAesKey.count))
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         out.append(contentsOf: encryptedAesKey)
         out.append(contentsOf: iv)
 
@@ -165,14 +173,22 @@ final class CryptoEngine {
     func decryptBytes(_ data: [UInt8], privateKeyAlias: String) throws -> [UInt8] {
         let privateKey = try keyManager.getPrivateKey(alias: privateKeyAlias)
         var offset = 0
+<<<<<<< HEAD
         guard data.count >= CryptoFormat.magicBytes.count + 2 else {
+=======
+        guard data.count >= CryptoFormat.magicBytes.count + 4 else {
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
             throw CryptoError.invalidFormat("Data too short to contain a header")
         }
         guard Array(data[0..<CryptoFormat.magicBytes.count]) == CryptoFormat.magicBytes else {
             throw CryptoError.invalidFormat("Unrecognized header; expected '\(CryptoFormat.magic)'")
         }
         offset = CryptoFormat.magicBytes.count
+<<<<<<< HEAD
         let keyLen = Int(beUInt16(Array(data[offset..<offset + 2]))); offset += 2
+=======
+        let keyLen = Int(beUInt32(Array(data[offset..<offset + 4]))); offset += 4
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         guard keyLen > 0, keyLen <= 4096, offset + keyLen + CryptoFormat.gcmIvLength <= data.count else {
             throw CryptoError.invalidFormat("Invalid encrypted key length in header")
         }
@@ -227,7 +243,11 @@ final class CryptoEngine {
 
     private func writeHeader(_ output: OutputStream, encryptedAesKey: [UInt8], iv: [UInt8]) throws {
         try write(output, CryptoFormat.magicBytes)
+<<<<<<< HEAD
         try write(output, uint16BE(encryptedAesKey.count))
+=======
+        try write(output, uint32BE(encryptedAesKey.count))
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         try write(output, encryptedAesKey)
         try write(output, iv)
     }
@@ -237,8 +257,13 @@ final class CryptoEngine {
         guard magic == CryptoFormat.magicBytes else {
             throw CryptoError.invalidFormat("Unrecognized file header; expected '\(CryptoFormat.magic)'")
         }
+<<<<<<< HEAD
         let lenBytes = try readExactly(input, count: 2)
         let keyLen = Int(beUInt16(lenBytes))
+=======
+        let lenBytes = try readExactly(input, count: 4)
+        let keyLen = Int(beUInt32(lenBytes))
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         guard keyLen > 0, keyLen <= 4096 else {
             throw CryptoError.invalidFormat("Invalid encrypted key length in header: \(keyLen)")
         }
@@ -328,6 +353,7 @@ final class CryptoEngine {
         return bytes
     }
 
+<<<<<<< HEAD
     private func uint16BE(_ value: Int) -> [UInt8] {
         let v = UInt16(value)
         return [UInt8(v >> 8 & 0xFF), UInt8(v & 0xFF)]
@@ -335,10 +361,23 @@ final class CryptoEngine {
 
     private func beUInt16(_ bytes: [UInt8]) -> UInt16 {
         (UInt16(bytes[0]) << 8) | UInt16(bytes[1])
+=======
+    private func uint32BE(_ value: Int) -> [UInt8] {
+        let v = UInt32(value)
+        return [UInt8(v >> 24 & 0xFF), UInt8(v >> 16 & 0xFF), UInt8(v >> 8 & 0xFF), UInt8(v & 0xFF)]
+    }
+
+    private func beUInt32(_ bytes: [UInt8]) -> UInt32 {
+        (UInt32(bytes[0]) << 24) | (UInt32(bytes[1]) << 16) | (UInt32(bytes[2]) << 8) | UInt32(bytes[3])
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
     }
 
     private func mapError(_ error: Error, defaultCase: (String) -> CryptoError) -> CryptoError {
         if let e = error as? CryptoError { return e }
         return defaultCase(error.localizedDescription)
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59

@@ -149,7 +149,11 @@ class EncryptionEngine(context: Context) {
                     cipher.init(Cipher.DECRYPT_MODE, aesKey, GCMParameterSpec(CryptoFormat.GCM_TAG_LENGTH_BITS, iv))
 
                     tmpOut = File(outputPath + ".tmp")
+<<<<<<< HEAD
                     val headerSize = CryptoFormat.MAGIC_BYTES.size + 2 + encryptedAesKey.size + CryptoFormat.GCM_IV_LENGTH
+=======
+                    val headerSize = CryptoFormat.MAGIC_BYTES.size + 4 + encryptedAesKey.size + CryptoFormat.GCM_IV_LENGTH
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
                     val ciphertextBytes = totalBytes - headerSize
                     BufferedOutputStream(FileOutputStream(tmpOut), CryptoFormat.STREAM_BUFFER_SIZE).use { rawOut ->
                         streamThroughCipher(rawIn, rawOut, cipher, ciphertextBytes, token, onProgress)
@@ -250,12 +254,16 @@ class EncryptionEngine(context: Context) {
 
     private fun writeHeader(out: OutputStream, encryptedAesKey: ByteArray, iv: ByteArray) {
         out.write(CryptoFormat.MAGIC_BYTES)
+<<<<<<< HEAD
         // NOTE: key-length field is 2 bytes (uint16, big-endian) to stay
         // binary-compatible with the Python reference tool, which writes it
         // with struct.pack(">H", ...). A 2048-bit RSA-OAEP ciphertext is
         // 256 bytes and a 4096-bit one is 512 bytes, both well under the
         // 65535 max of a uint16, so this comfortably covers real key sizes.
         out.write(shortToBigEndianBytes(encryptedAesKey.size))
+=======
+        out.write(intToBigEndianBytes(encryptedAesKey.size))
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         out.write(encryptedAesKey)
         out.write(iv)
     }
@@ -267,9 +275,15 @@ class EncryptionEngine(context: Context) {
         if (!magic.contentEquals(CryptoFormat.MAGIC_BYTES)) {
             throw CryptoException.InvalidFormat("Unrecognized file header; expected '${CryptoFormat.MAGIC}'")
         }
+<<<<<<< HEAD
         val lenBytes = ByteArray(2)
         readFully(input, lenBytes)
         val keyLen = bigEndianBytesToShort(lenBytes)
+=======
+        val lenBytes = ByteArray(4)
+        readFully(input, lenBytes)
+        val keyLen = bigEndianBytesToInt(lenBytes)
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         if (keyLen <= 0 || keyLen > 4096) {
             throw CryptoException.InvalidFormat("Invalid encrypted key length in header: $keyLen")
         }
@@ -317,17 +331,35 @@ class EncryptionEngine(context: Context) {
         }
     }
 
+<<<<<<< HEAD
     /** 2-byte big-endian encoding, matching Python's struct.pack(">H", ...). */
     private fun shortToBigEndianBytes(value: Int): ByteArray = byteArrayOf(
+=======
+    private fun intToBigEndianBytes(value: Int): ByteArray = byteArrayOf(
+        (value ushr 24 and 0xFF).toByte(),
+        (value ushr 16 and 0xFF).toByte(),
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
         (value ushr 8 and 0xFF).toByte(),
         (value and 0xFF).toByte()
     )
 
+<<<<<<< HEAD
     private fun bigEndianBytesToShort(bytes: ByteArray): Int =
         ((bytes[0].toInt() and 0xFF) shl 8) or
                 (bytes[1].toInt() and 0xFF)
+=======
+    private fun bigEndianBytesToInt(bytes: ByteArray): Int =
+        ((bytes[0].toInt() and 0xFF) shl 24) or
+            ((bytes[1].toInt() and 0xFF) shl 16) or
+            ((bytes[2].toInt() and 0xFF) shl 8) or
+            (bytes[3].toInt() and 0xFF)
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
 
     private fun SecretKey.destroyQuietly() {
         try { if (this is javax.security.auth.Destroyable && !this.isDestroyed) this.destroy() } catch (_: Throwable) {}
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dc73e19c0a1ff98a8b3c8cf8e378318f197e1a59
